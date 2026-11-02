@@ -5,6 +5,56 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bilişim Teknolojileri Ders Portalı</title>
     <link rel="stylesheet" href="gorunum.css">
+    
+    <!-- Firebase SDK (Modular CDN) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // Firebase Konsolundan Alacağınız Yapılandırma Bilgileri
+        const firebaseConfig = {
+            apiKey: "AIzaSy...",
+            authDomain: "bt-ders-portali.firebaseapp.com",
+            projectId: "bt-ders-portali",
+            storageBucket: "bt-ders-portali.appspot.com",
+            messagingSenderId: "123456789",
+            appId: "1:123456789:web:abcdef"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Firestore'dan Konuları Çeken Fonksiyon
+        async function konulariYukle() {
+            const querySnapshot = await getDocs(collection(db, "konular"));
+            
+            const liste5 = document.getElementById("liste-5");
+            const liste6 = document.getElementById("liste-6");
+            
+            liste5.innerHTML = "";
+            liste6.innerHTML = "";
+
+            querySnapshot.forEach((doc) => {
+                const data = doc.data();
+                const li = document.createElement("li");
+                li.className = "topic-item";
+                li.innerHTML = `
+                    <a href="${data.dosyaUrl}" class="topic-link">
+                        <span>${data.baslik}</span>
+                        <span class="badge">Aç ➔</span>
+                    </a>
+                `;
+
+                if (data.sinif === 5) {
+                    liste5.appendChild(li);
+                } else if (data.sinif === 6) {
+                    liste6.appendChild(li);
+                }
+            });
+        }
+
+        window.addEventListener("DOMContentLoaded", konulariYukle);
+    </script>
 </head>
 <body>
 
@@ -19,26 +69,16 @@
             <!-- 5. SINIF -->
             <div class="card">
                 <h2>📘 5. Sınıf Konu Başlıkları</h2>
-                <ul class="topic-list">
-                    <li class="topic-item">
-                        <a href="5sinif.html" class="topic-link">
-                            <span>5. Sınıf Ders Notları ve Sunumlar</span>
-                            <span class="badge">Aç ➔</span>
-                        </a>
-                    </li>
+                <ul class="topic-list" id="liste-5">
+                    <li>Konular yükleniyor...</li>
                 </ul>
             </div>
 
             <!-- 6. SINIF -->
             <div class="card sinif-6">
                 <h2>📙 6. Sınıf Konu Başlıkları</h2>
-                <ul class="topic-list">
-                    <li class="topic-item">
-                        <a href="6sinif.html" class="topic-link">
-                            <span>6. Sınıf Ders Notları ve Sunumlar</span>
-                            <span class="badge">Aç ➔</span>
-                        </a>
-                    </li>
+                <ul class="topic-list" id="liste-6">
+                    <li>Konular yükleniyor...</li>
                 </ul>
             </div>
 
